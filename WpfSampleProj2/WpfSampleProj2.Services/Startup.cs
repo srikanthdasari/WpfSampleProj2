@@ -33,12 +33,11 @@ namespace WpfSampleProj2.Services
             var connStr = Configuration["connectionStrings:DBCoreConnection"];
 
             services.AddDbContext<LibraryContext>(o => o.UseSqlServer(connStr));
-
             services.AddScoped<ILibraryRepository, LibraryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory ,LibraryContext libraryContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -52,7 +51,7 @@ namespace WpfSampleProj2.Services
                 app.UseExceptionHandler();
             }
 
-            libraryContext.EnsureSeedDataForContext();
+            //libraryContext.EnsureSeedDataForContext();
 
             app.UseMvc();
         }
