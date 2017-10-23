@@ -24,6 +24,10 @@ namespace WpfSampleProj2.Services.Services
 
         Book GetBookForAuthor(Guid authorId, Guid bookId);
 
+        Book GetBookbyBookId(Guid bookId);
+
+        bool BookExists(Guid bookId);
+
         void AddBookForAuthor(Guid authorId, Book book);
 
         void UpdateBookForAuthor(Book book);

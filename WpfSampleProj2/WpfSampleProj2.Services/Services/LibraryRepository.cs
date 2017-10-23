@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using WpfSampleProj2.Lib.Extensions;
@@ -23,7 +24,7 @@ namespace WpfSampleProj2.Services.Services
             _context.Authors.Add(author);
 
             //the repository fills the id (instead of using identity column)
-            if (author.Books.Any())
+            if (author.Books.IfNotNull(x=>x.Any()))
             {
                 foreach (var book in author.Books)
                 {
@@ -42,6 +43,8 @@ namespace WpfSampleProj2.Services.Services
                     book.Id = Guid.NewGuid();
                 }
 
+                if (author.Books.IsNull())
+                    author.Books = new Collection<Book>();
                 author.Books.Add(book);
             }
         }
@@ -49,6 +52,11 @@ namespace WpfSampleProj2.Services.Services
         public bool AuthorExists(Guid authoId)
         {
             return _context.Authors.Any(a => a.Id == authoId);
+        }
+
+        public bool BookExists(Guid bookId)
+        {
+            return _context.Books.Any(a => a.Id == bookId);
         }
 
         public void DeleteAuthor(Author author)
@@ -86,6 +94,11 @@ namespace WpfSampleProj2.Services.Services
                         .Where(b => b.AuthorId == authorId).OrderBy(b => b.Title).ToList();
 
 
+        }
+
+        public Book GetBookbyBookId(Guid bookId)
+        {
+            return _context.Books.Where(b => b.Id == bookId).FirstOrDefault();
         }
 
         public Book GetBookForAuthor(Guid authorId, Guid bookId)

@@ -6,6 +6,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using WpfSampleProj2.Services.Entities;
 using WpfSampleProj2.Services.Services;
+using AutoMapper;
+using WpfSampleProj2.Services.MappingProfiles;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace WpfSampleProj2.Services
 {
@@ -27,7 +31,11 @@ namespace WpfSampleProj2.Services
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(setupAction =>
+            {
+                setupAction.ReturnHttpNotAcceptable = true;
+                setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+            });
 
 
             var connStr = Configuration["connectionStrings:DBCoreConnection"];
@@ -48,10 +56,24 @@ namespace WpfSampleProj2.Services
             }
             else
             {
-                app.UseExceptionHandler();
+                app.UseExceptionHandler(appBuilder =>
+                {
+                    appBuilder.Run(async context =>
+                    {
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync("An Unexpected fault happend , please retry later");
+                    });
+                });
             }
 
-            //libraryContext.EnsureSeedDataForContext();
+            Mapper.Initialize(c =>
+            c.AddProfiles(new[]
+            {
+                typeof(AuthorMapperProfile),
+                typeof(BookMappingProfile),
+                typeof(AuthorForCreationMapperProfile),
+                typeof(BookForCreationMapperProfile)
+            }));
 
             app.UseMvc();
         }
