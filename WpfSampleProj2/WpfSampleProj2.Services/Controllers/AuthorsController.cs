@@ -92,6 +92,24 @@ namespace WpfSampleProj2.Services.Controllers
             return NotFound();
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeleteAuthor(Guid id)
+        {
+            var authorFromRepo = _libraryRepository.GetAuthor(id);
+            if(authorFromRepo.IsNull())
+            {
+                return NotFound();
+            }
+
+            _libraryRepository.DeleteAuthor(authorFromRepo);
+
+            if(!_libraryRepository.Save())
+            {
+                throw new Exception($"Error on deleting the {id}");
+            }
+
+            return NoContent();
+        }
 
     }
 }

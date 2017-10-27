@@ -35,6 +35,7 @@ namespace WpfSampleProj2.Services
             {
                 setupAction.ReturnHttpNotAcceptable = true;
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
             });
 
 
@@ -72,7 +73,8 @@ namespace WpfSampleProj2.Services
                 typeof(AuthorMapperProfile),
                 typeof(BookMappingProfile),
                 typeof(AuthorForCreationMapperProfile),
-                typeof(BookForCreationMapperProfile)
+                typeof(BookForCreationMapperProfile),
+                typeof(BookForUpdateMapperProfile)
             }));
 
             app.UseMvc();
