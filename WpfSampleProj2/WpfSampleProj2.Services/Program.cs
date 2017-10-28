@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 
@@ -12,6 +8,8 @@ namespace WpfSampleProj2.Services
     {
         public static void Main(string[] args)
         {
+            //var logger = LogBuilder.ConfigureNLog("NLog.config").GetCurrentClassLogger();
+
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())

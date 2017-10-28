@@ -10,6 +10,9 @@ using AutoMapper;
 using WpfSampleProj2.Services.MappingProfiles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Diagnostics;
+using WpfSampleProj2.Lib.Extensions;
+using NLog.Web;
 
 namespace WpfSampleProj2.Services
 {
@@ -49,9 +52,10 @@ namespace WpfSampleProj2.Services
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
-            if(env.IsDevelopment())
+            loggerFactory.AddDebug(LogLevel.Debug);
+            loggerFactory.AddProvider(new NLog.Extensions.Logging.NLogLoggerProvider());
+            
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -61,6 +65,13 @@ namespace WpfSampleProj2.Services
                 {
                     appBuilder.Run(async context =>
                     {
+                        var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+                        if(exceptionHandlerFeature.IsNotNull())
+                        {
+                            var logger = loggerFactory.CreateLogger("Global Exception Logger");
+                            logger.LogError(500, exceptionHandlerFeature.Error, exceptionHandlerFeature.Error.Message);
+                        }
+
                         context.Response.StatusCode = 500;
                         await context.Response.WriteAsync("An Unexpected fault happend , please retry later");
                     });

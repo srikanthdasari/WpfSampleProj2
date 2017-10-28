@@ -10,6 +10,8 @@ using WpfSampleProj2.Services.Services;
 using WpfSampleProj2.Services.Extensions;
 using WpfSampleProj2.Services.Entities;
 using Microsoft.AspNetCore.JsonPatch;
+using WpfSampleProj2.Lib.Helper;
+using Microsoft.Extensions.Logging;
 
 namespace WpfSampleProj2.Services.Controllers
 {
@@ -17,10 +19,12 @@ namespace WpfSampleProj2.Services.Controllers
     public class BooksController:Controller
     {
         private ILibraryRepository _libraryRepository;
+        private ILogger _logger;
 
-        public BooksController(ILibraryRepository libraryRepository)
+        public BooksController(ILibraryRepository libraryRepository, ILogger<BooksController> logger)
         {
             _libraryRepository = libraryRepository;
+            _logger = logger;
         }
 
         [HttpGet(Name = "GetBooksForAuthor")]
@@ -44,6 +48,17 @@ namespace WpfSampleProj2.Services.Controllers
             if(book.IsNull())
             {
                 return BadRequest();
+            }
+
+            if(book.Description==book.Title)
+            {
+                ModelState.AddModelError(nameof(BookForCreationDto), "The Provided description should be different from the title.");
+            }
+
+            if(!ModelState.IsValid)
+            {
+                //Return 422
+                return new UnprocessableEntityObjectResult(ModelState);
             }
 
             if(!_libraryRepository.AuthorExists(authorId))
@@ -87,6 +102,8 @@ namespace WpfSampleProj2.Services.Controllers
                 throw new Exception($"Deletingbook {id} for author{authorId} failed on");
             }
 
+            _logger.LogInformation(100, $"Bok {id} for author {authorId} was deleted");
+
             return NoContent();
         }
 
@@ -96,6 +113,17 @@ namespace WpfSampleProj2.Services.Controllers
             if(book.IsNull())
             {
                 return BadRequest();
+            }
+
+            if (book.Description == book.Title)
+            {
+                ModelState.AddModelError(nameof(BookForUpdateDto), "The Provided description should be different from the title.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                //Return 422
+                return new UnprocessableEntityObjectResult(ModelState);
             }
 
             if (!_libraryRepository.AuthorExists(authorId))
@@ -163,9 +191,12 @@ namespace WpfSampleProj2.Services.Controllers
 
             var bookToPatch = bookForAuthorFromRepo.Map<BookForUpdateDto>();
 
-            patchDoc.ApplyTo(bookToPatch);
+            patchDoc.ApplyTo(bookToPatch, ModelState);
 
-            // Add Validation
+            if(!ModelState.IsValid)
+            {
+                return new UnprocessableEntityObjectResult(ModelState);
+            }
 
             bookForAuthorFromRepo.UpdateDestination<Book, BookForUpdateDto>(bookToPatch);
 

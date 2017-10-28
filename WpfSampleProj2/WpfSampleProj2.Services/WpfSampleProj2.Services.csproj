@@ -17,6 +17,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.0.0-rtm-rc2" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.4.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WpfSampleProj2.Lib\WpfSampleProj2.Lib.csproj" />
