@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WpfSampleProj2.Services.Entities;
+using WpfSampleProj2.Services.Helper;
 
 namespace WpfSampleProj2.Services.Services
 {
     public interface ILibraryRepository
     {
-        IEnumerable<Author> GetAuthors();
+        PagedList<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters);
 
         IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds);
 

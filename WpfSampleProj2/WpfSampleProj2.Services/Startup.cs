@@ -12,7 +12,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Diagnostics;
 using WpfSampleProj2.Lib.Extensions;
-using NLog.Web;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Newtonsoft.Json.Serialization;
+//using NLog.Web;
 
 namespace WpfSampleProj2.Services
 {
@@ -39,13 +43,28 @@ namespace WpfSampleProj2.Services
                 setupAction.ReturnHttpNotAcceptable = true;
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+            }).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
+
+            
 
 
             var connStr = Configuration["connectionStrings:DBCoreConnection"];
 
             services.AddDbContext<LibraryContext>(o => o.UseSqlServer(connStr));
             services.AddScoped<ILibraryRepository, LibraryRepository>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper, UrlHelper>(implementationFactory =>
+            {
+                var actionContext = implementationFactory.GetService<IActionContextAccessor>().ActionContext;
+
+                return new UrlHelper(actionContext);
+            });
+
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+            services.AddTransient<ITypeHelperService, TypeHelperService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,7 +72,7 @@ namespace WpfSampleProj2.Services
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug(LogLevel.Debug);
-            loggerFactory.AddProvider(new NLog.Extensions.Logging.NLogLoggerProvider());
+            //loggerFactory.AddProvider(new NLog.Extensions.Logging.NLogLoggerProvider());
             
             if (env.IsDevelopment())
             {
