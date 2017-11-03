@@ -11,7 +11,7 @@ namespace WpfSampleProj2.Services.MappingProfiles
         {
             CreateMap<Author, AuthorDto>()
                 .ForMember(d => d.Name, o => o.ResolveUsing(s => s.FirstName + ", " + s.LastName))
-                .ForMember(d => d.Age, o => o.ResolveUsing(s => s.DateOfBirth.GetCurrentAge()));
+                .ForMember(d => d.Age, o => o.ResolveUsing(s => s.DateOfBirth.GetCurrentAge(s.DateOfDeath)));
                 
         }
     }

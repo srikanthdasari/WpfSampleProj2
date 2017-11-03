@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WpfSampleProj2.Services.Models
 {
-    public class BookDto
+    public class BookDto:LinkResourceBaseDto
     {
         public Guid Id { get; set; }
 

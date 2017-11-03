@@ -11,8 +11,8 @@ using WpfSampleProj2.Services.Entities;
 namespace WpfSampleProj2.Services.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20171018004755_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20171103140136_InitDb")]
+    partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,8 @@ namespace WpfSampleProj2.Services.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTimeOffset>("DateOfBirth");
+
+                    b.Property<DateTimeOffset?>("DateOfDeath");
 
                     b.Property<string>("FirstName")
                         .IsRequired()

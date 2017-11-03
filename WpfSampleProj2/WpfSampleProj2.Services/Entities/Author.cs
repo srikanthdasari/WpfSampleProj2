@@ -22,10 +22,15 @@ namespace WpfSampleProj2.Services.Entities
         [Required]
         public DateTimeOffset DateOfBirth { get; set; }
 
+
+        public DateTimeOffset? DateOfDeath { get; set; }
+
         [Required]
         [MaxLength(50)]
         public string Genre { get; set; }
 
         public ICollection<Book> Books { get; set; }
+
+
     }
 }

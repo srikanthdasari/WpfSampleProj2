@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Newtonsoft.Json.Serialization;
+using System.Linq;
 //using NLog.Web;
 
 namespace WpfSampleProj2.Services
@@ -43,6 +44,18 @@ namespace WpfSampleProj2.Services
                 setupAction.ReturnHttpNotAcceptable = true;
                 setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+
+                var jsonInputFormatter = setupAction.InputFormatters.OfType<JsonInputFormatter>().FirstOrDefault();
+
+                if (jsonInputFormatter.IsNotNull())
+                {
+                    jsonInputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.author.full+json");
+                    jsonInputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.authorwithdateofdeath.full+json");
+                }
+
+                var jsonOutputFormatter = setupAction.OutputFormatters.OfType<JsonOutputFormatter>().FirstOrDefault();
+                if (jsonOutputFormatter.IsNotNull())
+                    jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.hateoas+json");
             }).AddJsonOptions(options =>
             {
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -101,10 +114,11 @@ namespace WpfSampleProj2.Services
             c.AddProfiles(new[]
             {
                 typeof(AuthorMapperProfile),
+                typeof(AuthorForCreationWithDateOfDeathMapperProfile),
                 typeof(BookMappingProfile),
                 typeof(AuthorForCreationMapperProfile),
                 typeof(BookForCreationMapperProfile),
-                typeof(BookForUpdateMapperProfile)
+                typeof(BookForUpdateMapperProfile)                
             }));
 
             app.UseMvc();

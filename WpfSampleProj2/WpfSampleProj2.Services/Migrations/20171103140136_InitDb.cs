@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WpfSampleProj2.Services.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,6 +14,7 @@ namespace WpfSampleProj2.Services.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateOfBirth = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    DateOfDeath = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Genre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)

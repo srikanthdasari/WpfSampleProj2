@@ -130,12 +130,18 @@ namespace WpfSampleProj2.Lib.Extensions
 
 
 
-        public static int GetCurrentAge(this DateTimeOffset dateTimeOffset)
+        public static int GetCurrentAge(this DateTimeOffset dateTimeOffset, DateTimeOffset? dateOfDeath)
         {
-            var currentDate = DateTime.UtcNow;
-            int age = currentDate.Year - dateTimeOffset.Year;
+            var dateToCaliculateTo = DateTime.UtcNow;
 
-            if (currentDate < dateTimeOffset.AddYears(age))
+            if(dateOfDeath.IsNotNull())
+            {
+                dateToCaliculateTo = dateOfDeath.Value.UtcDateTime;
+            }
+
+            int age = dateToCaliculateTo.Year - dateTimeOffset.Year;
+
+            if (dateToCaliculateTo < dateTimeOffset.AddYears(age))
             {
                 age--;
             }

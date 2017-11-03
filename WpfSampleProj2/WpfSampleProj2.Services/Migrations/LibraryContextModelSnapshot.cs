@@ -20,12 +20,14 @@ namespace WpfSampleProj2.Services.Migrations
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Author", b =>
+            modelBuilder.Entity("WpfSampleProj2.Services.Entities.Author", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTimeOffset>("DateOfBirth");
+
+                    b.Property<DateTimeOffset?>("DateOfDeath");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -44,7 +46,7 @@ namespace WpfSampleProj2.Services.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("Book", b =>
+            modelBuilder.Entity("WpfSampleProj2.Services.Entities.Book", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -65,9 +67,9 @@ namespace WpfSampleProj2.Services.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("Book", b =>
+            modelBuilder.Entity("WpfSampleProj2.Services.Entities.Book", b =>
                 {
-                    b.HasOne("Author", "Author")
+                    b.HasOne("WpfSampleProj2.Services.Entities.Author", "Author")
                         .WithMany("Books")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade);

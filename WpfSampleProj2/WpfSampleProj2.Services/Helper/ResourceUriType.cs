@@ -9,6 +9,6 @@ namespace WpfSampleProj2.Services.Helper
     {
         PreviousPage,
         NextPage,
-
+        Current
     }
 }
