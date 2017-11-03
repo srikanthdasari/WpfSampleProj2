@@ -224,9 +224,9 @@ namespace WpfSampleProj2.Services.Controllers
                 return BadRequest();
             }
 
-            var authorEntity = Mapper.Map<Author>(author);
 
-            //authorEntity.UpdateDestination<Author, AuthorForCreationWithDateOfDeathDto>(author);
+            var authorEntity = new Author();
+            authorEntity.UpdateDestination<Author, AuthorForCreationWithDateOfDeathDto>(author);
 
             _libraryRepository.AddAuthor(authorEntity);
 
