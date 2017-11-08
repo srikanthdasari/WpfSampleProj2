@@ -78,6 +78,11 @@ namespace WpfSampleProj2.Services
 
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
             services.AddTransient<ITypeHelperService, TypeHelperService>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Library Api", Description="Just description" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -122,6 +127,12 @@ namespace WpfSampleProj2.Services
             }));
 
             app.UseMvc();
+            app.UseStaticFiles();
+            app.UseSwagger();
+            app.UseSwaggerUI(c=>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json","Jusr Description");
+            });
         }
     }
 }

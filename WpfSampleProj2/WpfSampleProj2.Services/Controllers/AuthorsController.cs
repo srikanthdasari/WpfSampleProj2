@@ -216,7 +216,7 @@ namespace WpfSampleProj2.Services.Controllers
         }
 
         [HttpPost(Name = "CreateAuthorWithDateOfDeath")]
-        [RequestHeaderMatchesMediaType("Content-Type",new[] { "application/vnd.marvin.authorwithdateofdeath.full+json" })]
+        [RequestHeaderMatchesMediaType("Content-Type", new[] { "application/vnd.marvin.authorwithdateofdeath.full+json" })]
         public IActionResult AuthorForCreationWithDateOfDeathDto([FromBody] AuthorForCreationWithDateOfDeathDto author)
         {
             if (author.IsNull())
